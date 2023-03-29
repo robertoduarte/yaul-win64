@@ -1,0 +1,6 @@
+[submodule "libyaul"]
+	path = libyaul
+	url = https://github.com/ijacquez/libyaul.git
+[submodule "libyaul-examples"]
+	path = libyaul-examples
+	url = https://github.com/ijacquez/libyaul-examples.git

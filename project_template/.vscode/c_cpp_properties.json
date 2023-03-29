@@ -1,0 +1,38 @@
+{
+    "configurations": [
+        {
+            "name": "Saturn",
+            "includePath": [
+                "${workspaceFolder}/../shared/perf",
+                "${workspaceFolder}/../shared/menu",
+                "${YAUL_ROOT}/libyaul/libyaul/lib/lib",
+                "${YAUL_ROOT}/libyaul/libyaul/.",
+                "${YAUL_ROOT}/libyaul/libyaul/bup",
+                "${YAUL_ROOT}/libyaul/libyaul/common",
+                "${YAUL_ROOT}/libyaul/libyaul/kernel",
+                "${YAUL_ROOT}/libyaul/libyaul/kernel/dbgio",
+                "${YAUL_ROOT}/libyaul/libyaul/math",
+                "${YAUL_ROOT}/libyaul/libyaul/scu",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs0/arp",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs0/dram-cart",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs0/usb-cart",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs0/flash",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs2/cd-block",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/a/cs2/cd-block",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/b/scsp",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/b/vdp",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/cpu",
+                "${YAUL_ROOT}/libyaul/libyaul/scu/bus/cpu/smpc",
+                "${YAUL_ROOT}/tool-chain/usr/sh2eb-elf/include/yaul"
+            ],
+            "compilerPath": "${YAUL_ROOT}/tool-chain/usr/bin/sh2eb-elf-gcc-11.2.0.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++23",
+            "intelliSenseMode": "linux-gcc-x86",
+            "defines": [
+                "__STDC_HOSTED__=0"
+            ]
+        }
+    ],
+    "version": 4
+}
