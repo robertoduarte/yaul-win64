@@ -1,6 +1,8 @@
 {
     "msys2_installer_url": "https://github.com/msys2/msys2-installer/releases/download/2023-03-18/msys2-base-x86_64-20230318.sfx.exe",
     "install_tools": [
+        "base-devel",
+        "gcc",
         "xorriso",
         "make",
         "python",
@@ -41,8 +43,8 @@
         "usr/bin/sh.exe",
         "usr/bin/xorrisofs.exe"
     ],
-    "libyaul_version": "0.1.0",
-    "libyaul_examples_version": "e9fcfdc7585b263952087249dc7aaacea7ecb3cd",
+    "libyaul_version": "0.2.0",
+    "libyaul_examples_version": "7b2160798db6fc1e7b4f38ad5290f2c3481b40fc",
     "yabause_url": "https://download.tuxfamily.org/yabause/releases/0.9.15/yabause-0.9.15-win64.zip",
     "mednafen_url": "https://mednafen.github.io/releases/files/mednafen-1.29.0-win64.zip"
 }
