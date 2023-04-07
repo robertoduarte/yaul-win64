@@ -18,7 +18,8 @@ Function DownloadFile([String] $address) {
     return $filePath
 }
 
-function UnpackZip([String] $source, [String] $destination) {
+
+function Unpack([String] $source, [String] $destination) {
 
     if (-Not $(Test-Path $destination)) {
         New-Item $destination -ItemType Directory | Out-Null
@@ -27,13 +28,20 @@ function UnpackZip([String] $source, [String] $destination) {
 
     New-Item $tempExtractPath -ItemType Directory
 
-    Expand-Archive -Force $source -DestinationPath $tempExtractPath
+    if ($source.Contains("zip")) { 
+        Expand-Archive -Force $source -DestinationPath $tempExtractPath
+    } else {
+        $tempFilePath = $(Split-Path -Path $source)
+        7za.exe x $source -o"$tempFilePath"
+        $source = $source.replace(".xz","")
+        7za.exe x $source -o"$tempExtractPath"
+    }
 
     if ((Get-ChildItem $tempExtractPath | Measure-Object).Count -gt 1) {
-        Copy-Item -Recurse -Path "$tempExtractPath/*" -Destination $destination
+        Copy-Item -Recurse -Force -Path "$tempExtractPath/*" -Destination $destination
     }
     else {
-        Copy-Item -Recurse -Path "$tempExtractPath/*/*" -Destination $destination
+        Copy-Item -Recurse -Force -Path "$tempExtractPath/*/*" -Destination $destination
     }
 
     if ($(Test-Path $tempExtractPath)) {
@@ -56,37 +64,40 @@ if ($(Test-Path $tmpPath)) {
 New-Item $tmpPath -ItemType Directory | Out-Null
 New-Item $buildPath -ItemType Directory | Out-Null
 
-Write-Host "Downloading MSYS2 Installer..."
+$7zip_url = $settings | Select-Object -ExpandProperty 7zip_url
+$downloaded_file = DownloadFile $7zip_url
+Unpack $downloaded_file "$tmpPath/7zip"
 
-$msys2_installer_url = $settings | Select-Object -ExpandProperty msys2_installer_url
-$msysInstaller = DownloadFile $msys2_installer_url
+$Env:PATH += ";$tmpPath/7zip"
 
-Set-Location $tmpPath
-& "$msysInstaller"
+$base_mingw_url = $settings | Select-Object -ExpandProperty base_mingw_url
+$downloaded_file = DownloadFile $base_mingw_url
+Unpack $downloaded_file "$buildPath/msys2"
 
-Write-Host "Setting up MSYS2..."
-$Env:PATH += ";$tmpPath/msys64/usr/bin"
-sh -c "/etc/profile"
-pacman -Syy
-foreach ($tool in ($settings | Select-Object -ExpandProperty install_tools)){
-    pacman -S --noconfirm $tool
-}
+$gcc_mingw_url = $settings | Select-Object -ExpandProperty gcc_mingw_url
+$downloaded_file = DownloadFile $gcc_mingw_url
+Unpack $downloaded_file "$buildPath/msys2/usr"
 
-New-Item "$buildPath/tool-chain/tmp" -ItemType Directory | Out-Null
-Expand-Archive -Force "$rootPath/sh2eb-elf.zip" -DestinationPath "$buildPath/tool-chain/"
-Rename-Item "$buildPath/tool-chain/sh2eb-elf" "usr"
+$sh2eb_elf_url = $settings | Select-Object -ExpandProperty sh2eb_elf_url
+$downloaded_file = DownloadFile $sh2eb_elf_url
+Unpack $downloaded_file "$buildPath/sh2eb_elf"
 
-foreach ($file in ($settings | Select-Object -ExpandProperty copy_to_bin)){
-    Copy-Item -Path "$tmpPath/msys64/$file" -Destination "$buildPath/tool-chain/usr/bin"
-}
+$yabause_url = $settings | Select-Object -ExpandProperty yabause_url
+$downloaded_file = DownloadFile $yabause_url
+Unpack $downloaded_file "$buildPath/emulators/yabause"
+
+$mednafen_url = $settings | Select-Object -ExpandProperty mednafen_url
+$downloaded_file = DownloadFile $mednafen_url
+Unpack $downloaded_file "$buildPath/emulators/mednafen"
 
 Copy-Item -Recurse -Path "$rootPath/libyaul" -Destination $buildPath
-Copy-Item -Path "$rootPath/scripts/set_yaul_root.bat" -Destination $buildPath
+Copy-Item -Recurse -Path "$rootPath/libyaul-examples" -Destination $buildPath
 
-Set-Location "$rootPath/libyaul"
-$Env:PATH += ";$buildPath/tool-chain/usr/bin"
+Set-Location "$buildPath/libyaul"
+$Env:PATH += ";$buildPath/sh2eb_elf/bin"
+$Env:PATH += ";$buildPath/msys2/usr/bin"
 $buildPath = $buildPath.Replace('\', '/')
-$Env:YAUL_INSTALL_ROOT = "$buildPath/tool-chain/usr"
+$Env:YAUL_INSTALL_ROOT = "$buildPath/sh2eb_elf"
 $Env:YAUL_ARCH_SH_PREFIX = "sh2eb-elf"
 $Env:YAUL_ARCH_M68K_PREFIX = "m68keb-elf"
 $Env:YAUL_BUILD_ROOT = "$buildPath/libyaul"
@@ -98,39 +109,5 @@ $Env:YAUL_OPTION_SPIN_ON_ABORT = "1"
 $Env:YAUL_OPTION_BUILD_GDB = "0"
 $Env:YAUL_OPTION_BUILD_ASSERT = "1"
 $Env:SILENT = "1"
-$Env:MAKE_ISO_XORRISO = "$buildPath/tool-chain/usr/bin/xorrisofs"
+$Env:MAKE_ISO_XORRISO = "$buildPath/msys2/usr/bin/xorrisofs"
 make install
-
-$packageName= "$releaseName-slim-$(get-date -f yyyyMMdd).zip"
-
-Write-Host "Creating slim zip package: $packageName..."
-
-Compress-Archive -Path $buildPath -DestinationPath "$rootPath/$packageName"
-
-Copy-Item -Recurse -Path "$rootPath/libyaul-examples" -Destination $buildPath
-
-foreach ($example in $(Get-ChildItem -Directory -Path "$buildPath/libyaul-examples")) { 
-    Copy-Item -Recurse -Path "$rootPath/project_template/*" -Destination $example.FullName
-}
-
-$packageName= "$releaseName-full-$(get-date -f yyyyMMdd).zip"
-
-Write-Host "Creating full zip package: $packageName..."
-
-Compress-Archive -Path $buildPath -DestinationPath "$rootPath/$packageName"
-
-$yabause_url = $settings | Select-Object -ExpandProperty yabause_url
-$downloaded_file = DownloadFile $yabause_url
-UnpackZip $downloaded_file "$buildPath/emulators/yabause"
-
-$mednafen_url = $settings | Select-Object -ExpandProperty mednafen_url
-$downloaded_file = DownloadFile $mednafen_url
-UnpackZip $downloaded_file "$buildPath/emulators/mednafen"
-
-$packageName= "$releaseName-fat-$(get-date -f yyyyMMdd).zip"
-
-Write-Host "Creating fat zip package: $packageName..."
-
-Compress-Archive -Path $buildPath -DestinationPath "$rootPath/$packageName"
-
-Write-Host "Finished!"
