@@ -36,6 +36,16 @@
                 "kind": "build",
                 "isDefault": true
             }
-        }
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "./clean.bat",
+            "problemMatcher": [],
+            "presentation": {
+                "showReuseMessage": false,
+                "clear": true
+            }
+        },
     ]
 }

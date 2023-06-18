@@ -1,4 +1,5 @@
 @ECHO Off
+call ..\..\setenv.bat
 
 if exist %YAUL_ROOT%emulators/mednafen/mednafen.exe (
     SET MEDNAFEN=%YAUL_ROOT%emulators/mednafen/mednafen.exe
