@@ -1,4 +1,5 @@
 @ECHO Off
+call ..\..\setenv.bat
 
 if exist %YAUL_ROOT%emulators/yabause/yabause.exe (
     SET YABAUSE=%YAUL_ROOT%emulators/yabause/yabause.exe

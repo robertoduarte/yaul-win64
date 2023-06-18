@@ -4,6 +4,7 @@
         ".projectile": true,
         "build/": true,
         "build.bat": true,
+        "clean.bat": true,
         "run_with_mednafen.bat": true,
         "run_with_yabause.bat": true,
         "*.iso": true,
