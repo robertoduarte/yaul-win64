@@ -1,18 +1,22 @@
 @ECHO Off
-call ..\..\setenv.bat
+call ..\..\scripts\setenv.bat
 
-if exist %YAUL_ROOT%emulators/mednafen/mednafen.exe (
-    SET MEDNAFEN=%YAUL_ROOT%emulators/mednafen/mednafen.exe
+where /q mednafen.exe
+IF ERRORLEVEL 1 (
+    echo "Using yaul-win64 mednafen installation!"
+    SET MEDNAFEN=%YAUL_ROOT%/emulators/mednafen/mednafen.exe
 ) else (
+    echo "Using system's mednafen installation!"
     SET MEDNAFEN=mednafen.exe
 )
 
 if not exist *.cue (
     echo "CUE/ISO missing, please build first."
+    pause
 ) else (
     @REM Finding first cue file and running it on mednafen
     FOR %%F IN (*.cue) DO (
-        %MEDNAFEN% %%F
+        start "" /MIN %MEDNAFEN% %%F
         exit /b
     )
 )
