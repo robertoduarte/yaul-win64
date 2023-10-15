@@ -3,8 +3,8 @@
     "base_mingw_url": "http://files.yaul.org/mingw-w64/base-mingw-w64-04302023.tar.xz",
     "gcc_mingw_url": "http://files.yaul.org/mingw-w64/gcc-mingw-w64-04302023.tar.xz",
     "sh2eb_elf_url": "http://files.yaul.org/mingw-w64/yaul-tool-chain-mingw-w64-r144.94a03a3.tar.xz",
-    "libyaul_version": "0.2.0",
-    "libyaul_examples_version": "7b2160798db6fc1e7b4f38ad5290f2c3481b40fc",
+    "libyaul_version": "0.3.1",
+    "libyaul_examples_version": "21fd76d83dffd49afc4926d6a8408eecfec474f5",
     "yabause_url": "https://download.tuxfamily.org/yabause/releases/0.9.15/yabause-0.9.15-win64.zip",
     "mednafen_url": "https://mednafen.github.io/releases/files/mednafen-1.29.0-win64.zip"
 }
