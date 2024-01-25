@@ -2,7 +2,7 @@
     "7zip_url": "https://www.7-zip.org/a/7za920.zip",
     "base_mingw_url": "http://files.yaul.org/mingw-w64/base-mingw-w64-04302023.tar.xz",
     "gcc_mingw_url": "http://files.yaul.org/mingw-w64/gcc-mingw-w64-04302023.tar.xz",
-    "sh2eb_elf_url": "http://files.yaul.org/mingw-w64/yaul-tool-chain-mingw-w64-r144.94a03a3.tar.xz",
+    "sh2eb_elf_url": "http://files.yaul.org/mingw-w64/yaul-tool-chain-mingw-w64-r149.13ccdf4.tar.xz",
     "libyaul_version": "0.3.1",
     "libyaul_examples_version": "21fd76d83dffd49afc4926d6a8408eecfec474f5",
     "yabause_url": "https://download.tuxfamily.org/yabause/releases/0.9.15/yabause-0.9.15-win64.zip",
